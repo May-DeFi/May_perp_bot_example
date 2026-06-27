@@ -1,0 +1,4 @@
+myenv/
+may9bot/*__pycache_
+may9bot/*.json
+bots/

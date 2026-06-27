@@ -61,7 +61,8 @@ class SignalExecutor:
                 tp_price = current_price * (1 - tp_pct / 100)
 
         collateral = self.cfg.get("collateral_usdc", 10.0)
-        leverage = int(self.cfg.get("leverage", 10))
+        # leverage = int(self.cfg.get("leverage", 10))
+        leverage = 10
 
         self.terminal.print_signal_received(signal)
 
