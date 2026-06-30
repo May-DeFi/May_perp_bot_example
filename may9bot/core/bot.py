@@ -80,9 +80,6 @@ class Bot:
                             for s in data.get("signals", []):
                                 await self._on_signal(s)
 
-                        elif msg_type == "signal_update":
-                            self.terminal.print_signal_update(data)
-
             except websockets.exceptions.ConnectionClosedError as e:
                 self.terminal.print_ws_status("DROPPED", str(e))
             except websockets.exceptions.ConnectionClosedOK:
@@ -184,26 +181,7 @@ class Bot:
             )
 
     async def _on_trade_closed(self, data: dict):
-        trade_id       = data.get("trade_id")
-        percent_profit = data.get("percent_profit", 0)
-        close_type     = data.get("close_type", "MARKET")
-        price          = data.get("price", 0)
-
-        pos = self.tracker.get(trade_id, trade_id)
-        if pos:
-            self.trade_log.record_close(
-                pair_id     = pos.pair_id,
-                trade_index = pos.trade_index,
-                exit_price  = price,
-                pnl_pct     = percent_profit,
-                reason      = close_type,
-            )
-            self.tracker.remove(pos.pair_id, pos.trade_index)
-            self.terminal.print_info(
-                f"Position closed — {pos.pair} "
-                f"pnl={percent_profit:+.2f}% "
-                f"type={close_type}"
-            )
+        pass
 
     async def _on_signal(self, signal: dict):
         executor = SignalExecutor(
@@ -242,10 +220,11 @@ class Bot:
             return
 
         self._monitor = Monitor(
-            tracker  = self.tracker,
-            client   = self.client,
-            config   = self.cfg,
-            terminal = self.terminal,
+            tracker    = self.tracker,
+            client     = self.client,
+            config     = self.cfg,
+            terminal   = self.terminal,
+            trade_log  = self.trade_log,
         )
 
         self.terminal.print_bot_started()
@@ -285,3 +264,5 @@ class Bot:
 
         self.terminal.show_positions_table(self.tracker.get_all())
         input("\nPress Enter to return to menu...")
+
+        

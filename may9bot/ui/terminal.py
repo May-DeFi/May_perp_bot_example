@@ -273,22 +273,6 @@ class Terminal:
             f"{DIM}sl={RESET}{sl:.4f}"
         )
 
-    def print_signal_update(self, data: dict):
-        ts = _ts()
-        sig_id  = data.get("id", "?")
-        status  = data.get("status", "?")
-        outcome = data.get("outcome")
-        pnl     = data.get("pnl_pct") or data.get("pnl")
-
-        out_color = BRIGHT_GREEN if outcome == "WIN" else (BRIGHT_RED if outcome == "LOSS" else WHITE)
-        pnl_str = f"  {DIM}pnl={RESET}{out_color}{pnl}{RESET}" if pnl else ""
-
-        print(
-            f"\n  {DIM}{ts}{RESET}  {CYAN}[UPDATE]{RESET}  "
-            f"id={sig_id}  status={status}  "
-            f"{out_color}{outcome or ''}{RESET}{pnl_str}"
-        )
-
     # ──────────────────────────────────────────────────────────────────────────
     # Trade events
     # ──────────────────────────────────────────────────────────────────────────
